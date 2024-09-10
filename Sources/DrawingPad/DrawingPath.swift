@@ -16,25 +16,25 @@ import UIKit
 ///     This represents the different segments of the path.
 ///   - linePoints: An array of points representing the current line being drawn.
 public struct DrawingPath: Sendable {
-    private var segments: [(points: [CGPoint], count: Int)] = []
+    private var lineSegments: [(points: [CGPoint], count: Int)] = []
     private var linePoints: [CGPoint] = []
     
     public init(
-        segments: [(points: [CGPoint], count: Int)] = [],
+        lineSegments: [(points: [CGPoint], count: Int)] = [],
         linePoints: [CGPoint] = []
     ) {
-        self.segments = segments
+        self.lineSegments = lineSegments
         self.linePoints = linePoints
     }
     
     /// Check if the drawing path is empty.
     public var isEmpty: Bool {
-        segments.isEmpty
+        lineSegments.isEmpty
     }
     
     /// Clear all segments and linePoints.
     public mutating func clear() {
-        self.segments.removeAll()
+        self.lineSegments.removeAll()
         self.linePoints.removeAll()
     }
     
@@ -43,7 +43,7 @@ public struct DrawingPath: Sendable {
     /// - Parameters:
     ///   - point: The CGPoint representing the location of the dot.
     mutating func addDot(_ point: CGPoint) {
-        segments.append(
+        lineSegments.append(
             (points: [point], count: 1)
         )
     }
@@ -63,7 +63,7 @@ public struct DrawingPath: Sendable {
     /// and then clears the `linePoints` array.
     mutating func endLine() {
         guard !linePoints.isEmpty else { return }
-        segments.append(
+        lineSegments.append(
             (points: linePoints, count: linePoints.count)
         )
         linePoints.removeAll()
@@ -87,7 +87,7 @@ public struct DrawingPath: Sendable {
         }
         
         // Iterate over all segments to add them to the path.
-        segments.forEach { segment in
+        lineSegments.forEach { segment in
             if let firstPoint = segment.points.first {
                 path.move(to: firstPoint)
                 segment.points.forEach { point in
